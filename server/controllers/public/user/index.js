@@ -1,0 +1,84 @@
+import express from "express";
+import bcrypt from "bcryptjs";
+import User from "../../../models/User.js";
+import sendEmail from "../../../utils/sendEmail.js";
+
+const router = express.Router();
+
+router.post("/register", async (req, res) => {
+  try {
+    const { firstName, lastName, email, age, mobile, gender } = req.body;
+    //check email
+    const existingEmail = await User.findOne({ email });
+    // check mobile
+    const existingMobile = await User.findOne({ mobile });
+
+    if (existingEmail || existingMobile) {
+      return res.status(400).json({ msg: "Email or Mobile already exists" });
+    }
+
+    // userId gneerate unique
+
+    const userId = `${firstName.toUpperCase()}-${Date.now()}`;
+
+    // randompassword
+    const randomPassword = Math.random().toString(36).slice(-8);
+
+    // enxrypt  password
+    const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+    const user = await User.create({
+      firstName,
+      lastName,
+      email,
+      age,
+      mobile,
+      gender,
+      password: hashedPassword,
+      userId,
+    });
+
+    await sendEmail(
+  email,
+  "Registration Successful",
+  `Hello ${firstName},
+
+Your User ID is: ${userId}
+Your Password is: ${randomPassword}`
+);
+
+   return res
+      .status(201)
+      .json({
+        msg: "User Created Successfully",
+        userId: user.userId,
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+
+
+// GET pagination
+
+router.get("/users",async(req,res)=> {
+  try {
+    const page = Number(req.query.page) || 1 ;
+    const limit = Number(req.query.limit) || 3;
+
+    const skip = (page - 1)* limit ;
+
+    const users = await User.find().select(-password).skip(skip).limit(limit)
+
+   
+
+    res.status(200).json({users, page})
+  } catch (error) {
+    // console.log(error)0
+    res.status(500).json({msg: "server error"})
+  }
+})
+
+export default router;
