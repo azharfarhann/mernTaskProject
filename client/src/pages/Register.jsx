@@ -1,4 +1,5 @@
 import { useState } from "react";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 function Register() {
@@ -12,6 +13,7 @@ function Register() {
   });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -31,6 +33,9 @@ function Register() {
       setMessage(
         `Registration Successful. Your user ID is ${response.data.userId}`,
       );
+      setTimeout(() => {
+  navigate("/login");
+}, 8000);
       setFormData({
         firstName: "",
         lastName: "",
