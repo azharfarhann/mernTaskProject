@@ -21,7 +21,7 @@ router.post("/register", async (req, res) => {
 
     const userId = `${firstName.toUpperCase()}-${Date.now()}`;
 
-    // randompassword
+    // gnrate randompassword
     const randomPassword = Math.random().toString(36).slice(-8);
 
     // enxrypt  password

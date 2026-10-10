@@ -1,5 +1,5 @@
 import { useState } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Register() {
@@ -16,9 +16,7 @@ function Register() {
   const navigate = useNavigate();
 
   function handleChange(e) {
-    const { name, value } = e.target;
-
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
   async function handleSubmit(e) {
@@ -34,8 +32,8 @@ function Register() {
         `Registration Successful. Your user ID is ${response.data.userId}`,
       );
       setTimeout(() => {
-  navigate("/login");
-}, 8000);
+        navigate("/login");
+      }, 3000);
       setFormData({
         firstName: "",
         lastName: "",
@@ -54,14 +52,18 @@ function Register() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Register</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="mx-auto mt-8 max-w-md space-y-4 rounded-lg bg-white p-6 shadow"
+    >
+      <h2 className="text-center text-2xl font-bold text-gray-800">Register</h2>{" "}
       <input
         type="text"
         name="firstName"
         value={formData.firstName}
         onChange={handleChange}
         placeholder="First Name"
+        className="w-full rounded border border-gray-300 p-2"
       />
       <input
         type="text"
@@ -69,6 +71,7 @@ function Register() {
         value={formData.lastName}
         onChange={handleChange}
         placeholder="Last Name"
+        className="w-full rounded border border-gray-300 p-2"
       />
       <input
         type="email"
@@ -76,6 +79,7 @@ function Register() {
         value={formData.email}
         onChange={handleChange}
         placeholder="Email"
+        className="w-full rounded border border-gray-300 p-2"
       />
       <input
         type="number"
@@ -85,6 +89,7 @@ function Register() {
         value={formData.age}
         onChange={handleChange}
         placeholder="Age"
+        className="w-full rounded border border-gray-300 p-2"
       />
       <input
         type="text"
@@ -92,17 +97,27 @@ function Register() {
         value={formData.mobile}
         onChange={handleChange}
         placeholder="Mobile"
+        className="w-full rounded border border-gray-300 p-2"
       />
-      <select name="gender" value={formData.gender} onChange={handleChange}>
+      <select
+        name="gender"
+        value={formData.gender}
+        onChange={handleChange}
+        className="w-full rounded border border-gray-300 p-2"
+      >
         <option value="">Select Gender</option>
         <option value="Male">Male</option>
         <option value="Female">Female</option>
         <option value="Other">Other</option>
       </select>
-      <button type="submit" disabled={loading}>
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full rounded bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:opacity-50"
+      >
         {loading ? "Registering.." : "Register"}
       </button>
-      <p>{message}</p>
+      <p className="text-center text-sm text-gray-700">{message}</p>
     </form>
   );
 }

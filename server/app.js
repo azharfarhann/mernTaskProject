@@ -11,7 +11,7 @@ const app = express()
 const PORT = process.env.PORT || 5000;
 
 
-// middleware
+// midlware
 app.use(express.json())
 app.use(cors())
 
